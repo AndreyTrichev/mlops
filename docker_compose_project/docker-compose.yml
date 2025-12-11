@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  jupyter:
+    build:
+      context: ./jupyter
+      dockerfile: Dockerfile
+    ports:
+      - "9191:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: postgres:15
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=andrey
+      - POSTGRES_PASSWORD=trichev
+      - POSTGRES_DB=trichev03
+    networks:
+      - app-network
+
+volumes:
+  pgdata:
+
+networks:
+  app-network:
+    driver: bridge
